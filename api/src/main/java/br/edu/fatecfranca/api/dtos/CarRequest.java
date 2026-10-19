@@ -16,3 +16,5 @@ public record CarRequest(
    BigDecimal sellingPrice,
    Long customerId
 ) {}
+
+// Teste commit DTO
