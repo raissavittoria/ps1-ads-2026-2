@@ -13,19 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.fatecfranca.api.dtos.UserRequest;
 import br.edu.fatecfranca.api.entities.User;
 import br.edu.fatecfranca.api.services.UserService;
-
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-    // private final UserRepository repository;
-
-    // public UserController(UserRepository repository) {
-    //     this.repository = repository;
-    // }
 
     private final UserService service;
 
@@ -33,99 +27,41 @@ public class UserController {
         this.service = service;
     }
 
-
-    // @PostMapping
-    // public ResponseEntity<User> create(@RequestBody User user) {
-    //     User savedUser = repository.save(user);
-
-    //     return ResponseEntity
-    //             .status(HttpStatus.CREATED)
-    //             .body(savedUser);
-    // }
-
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-
-        User savedUser = service.create(user);
+    public ResponseEntity<User> create(@RequestBody UserRequest request) {
+        User savedUser = service.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(savedUser);
     }
 
-
-    // @GetMapping
-    // public List<User> findAll() {
-    //     return repository.findAll();
-    // }
-
     @GetMapping
     public List<User> findAll() {
         return service.findAll();
     }
 
-
-    // @GetMapping("/{id}")
-    // public ResponseEntity<User> findById(@PathVariable Long id) {
-
-    //     return repository.findById(id)
-    //             .map(ResponseEntity::ok)
-    //             .orElse(ResponseEntity.notFound().build());
-    // }
-
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
-    // @PutMapping("/{id}")
-    // public ResponseEntity<User> update(
-    //         @PathVariable Long id,
-    //         @RequestBody User user) {
-
-    //     if (!repository.existsById(id)) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-
-    //     user.setId(id);
-
-    //     return ResponseEntity.ok(repository.save(user));
-    // }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> update(
             @PathVariable Long id,
-            @RequestBody User user) {
+            @RequestBody UserRequest request) {
 
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        user.setId(id);
-
-        return ResponseEntity.ok(service.update(user));
+        return ResponseEntity.ok(service.update(id, request));
     }
-
-
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> delete(@PathVariable Long id) {
-
-    //     if (!repository.existsById(id)) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-
-    //     repository.deleteById(id);
-
-    //     return ResponseEntity.noContent().build();
-    // }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-
         if (!service.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -134,5 +70,4 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-
 }
